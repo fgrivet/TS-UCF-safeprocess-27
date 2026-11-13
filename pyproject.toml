@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools >= 77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TS-UCF"
+version = "0.1.0"
+description = "TS-UCF: A Robust and Explainable Method for Time-Series Anomaly Detection"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "GPL-3.0-or-later" }
+authors = [
+    { name = "Florian Grivet" },
+    { name = "Louise Travé-Massuyès" },
+    { name = "Didier Henrion" },
+    { name = "Jean-Bernard Lasserre" },
+    { name = "Lionel Vintenat" },
+    { name = "Clément Hinderer" },
+]
+keywords = [
+    "anomaly-detection",
+    "time-series",
+    "christoffel-function",
+    "orthogonal-polynomials",
+    "interpretable-ml",
+    "safeprocess",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = ["numpy", "scipy", "matplotlib", "scikit-learn"]
+
+[project.optional-dependencies]
+reproduce = [
+    "pandas",
+    "prts",
+    "plotly",
+    "kaleido",
+    "filelock",
+    "jupyter",
+    "nbformat",
+] # Needed to reproduce the paper's results and figures
+
+[project.urls]
+Homepage = "https://github.com/fgrivet/TS-UCF-safeprocess-27"
+Repository = "https://github.com/fgrivet/TS-UCF-safeprocess-27"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ts_ucf"]
