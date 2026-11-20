@@ -120,12 +120,6 @@ def plot_distances(distances, figsize=(14, 2), n_poly_opt: int = 0):
             plt.vlines(x, 0, y, lw=1)
 
             plt.title(f"score = {correct_scores[num_window, 0]:_.6g} - poly score = {inversion_scores[num_window, 0]:_.6g}")
-            print(y.sum(), 1 / y.sum())
-            a, b = distances[num_window].min(), distances[num_window].max()
-            r = (b - a) / (b + a)
-            q = (np.sqrt(b) - np.sqrt(a)) / (np.sqrt(b) + np.sqrt(a))
-            q_res = (4 * q**4) / ((1 + q**4) ** 2)
-            print(a, b, r, r**4, 1 / (r**4), q_res, 1 / q_res)
 
         else:
             y = np.ones(K_train)
@@ -240,3 +234,43 @@ def plot_scores(signal_test, scores, s, point_labels=None, figsize=(14, 2)):
         ax2.set_yscale("log")
         plt.tight_layout()
         plt.show()
+
+
+def plot_3D_scores(scores, log=True, multi=True, colors=None, max_channel_per_row=6):
+    n_channels, n_window, n_val = scores.shape
+    x = np.arange(1, n_window + 1)
+    y = np.arange(1, n_val + 1)
+    z_max = 1.1 * np.nanmax(scores[~np.isinf(scores)])
+    if np.isnan(z_max):
+        z_max = 1
+    if log:
+        z_max = np.log1p(z_max)
+
+    if colors is None:
+        colors = np.full((n_channels, n_window), "blue")
+
+    n_row = int(np.ceil(n_channels / max_channel_per_row))
+    fig = plt.figure(figsize=(14, 4 * n_row))
+    for channel_num, score_channel in enumerate(scores):
+        ax = fig.add_subplot(n_row, max_channel_per_row, channel_num + 1, projection="3d")
+
+        for i in range(len(x)):
+            z = score_channel[i, :]
+            if log:
+                z = np.log1p(z)
+            ax.plot(x[i] * np.ones_like(y), y, z, color=colors[channel_num, i], lw=2, marker="o")
+
+        ax.set_zlim(0, z_max)
+        ax.set_xlabel("Window ID")
+        ax.set_ylabel("n")
+        ax.set_zlabel("Score")
+
+        if multi and (channel_num == (len(scores) - 1)):
+            plt.title(f"Score for all channels jointly (multivariate analysis)")
+        else:
+            plt.title(f"Score for channel {channel_num + 1}")
+
+        ax.view_init(elev=20, azim=-70)
+
+    plt.tight_layout()
+    plt.show()

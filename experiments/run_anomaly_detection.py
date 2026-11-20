@@ -209,4 +209,5 @@ if __name__ == "__main__":
     parser.add_argument("--njobs", type=parse_positive_minus_1, required=False, default=-1)
 
     args = parser.parse_args()
+    njobs = None if args.njobs == -1 else args.njobs
     main(args.datafolder, args.ws, args.njobs)
